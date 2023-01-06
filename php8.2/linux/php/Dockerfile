@@ -30,4 +30,12 @@ RUN docker-php-ext-install pdo\
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+RUN apk add -U freetype-dev \
+  libjpeg-turbo-dev \
+  libpng-dev \
+  libwebp-dev
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install -j$(nproc) gd
+
 USER 1000:1000
