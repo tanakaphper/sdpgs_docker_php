@@ -5,6 +5,7 @@ services:
     build : php
     volumes:
       - ./src:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
     working_dir: /var/www/html
