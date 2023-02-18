@@ -7,18 +7,6 @@ RUN apk add -U --no-cache \
     zip \
     libzip-dev \
     unzip \
-    php8-bcmath \
-    php8-ctype \
-    php8-curl \
-    php8-dom \
-    php8-fileinfo \
-    php8-json \
-    php8-mbstring \
-    php8-openssl \
-    php8-xml \
-    php8-xmlreader \
-    php8-xmlwriter \
-    php8-zlib \
     supervisor
 
 RUN docker-php-ext-install pdo\
@@ -26,7 +14,8 @@ RUN docker-php-ext-install pdo\
     mysqli \
     curl \
     zip \
-    bcmath
+    bcmath \
+    pcntl
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -37,5 +26,12 @@ RUN apk add -U freetype-dev \
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install -j$(nproc) gd
+
+RUN touch /var/run/supervisor.sock
+COPY supervisord.conf /etc/supervisord.conf
+RUN chmod 777 /etc/supervisord.conf
+COPY docker-php-entrypoint-override /usr/local/bin/docker-php-entrypoint-override
+RUN chmod 777 /usr/local/bin/docker-php-entrypoint-override
+ENTRYPOINT ["/usr/local/bin/docker-php-entrypoint-override"]
 
 USER 1000:1000
