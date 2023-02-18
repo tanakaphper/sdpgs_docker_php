@@ -1,0 +1,5 @@
+#!/bin/sh
+
+export USER=$(whoami)
+
+supervisord -c /etc/supervisord.conf
